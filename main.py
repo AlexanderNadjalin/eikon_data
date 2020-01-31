@@ -1,14 +1,16 @@
+"""
+
+Create data files or time series files from Eikon's Python API.
+
+"Data files" are files with a snapshot of data such as current price, company sector, instrument maturity etc.
+"Time series files" are historical prices for given instruments. Eikon has a limited number of fields via the API.
+
+Pre-requisites:
+    * A running Eikon desktop application.
+    * A valid Eikon API key in the "eikon_cfg.cfg" file.
+"""
+
 import eikon_data_import as edi
-
-
-def create_data_file(rics_conf: str, fields_conf: str, file_name: str) -> None:
-    rics, fields = edi.read_config(rics_conf, fields_conf, time_series=False)
-    edi.make_data(rics, fields, file_name)
-
-
-def create_time_series_file(rics_conf: str, fields_conf: list, start_dt: str, end_dt: str, file_name: str) -> None:
-    rics = edi.read_config(rics=rics_conf, fields=None, time_series=True)
-    edi.make_time_series(rics, fields_conf, start_dt, end_dt, file_name)
 
 
 if __name__ == '__main__':
@@ -24,8 +26,8 @@ if __name__ == '__main__':
 
     # Time series specific:
     # Earliest date
-    start_date = '2020-01-22'
-    # Newest date
+    start_date = '2019-01-02'
+    # Latest date
     end_date = '2020-01-24'
     # Field to get
     field = ['CLOSE']
@@ -33,10 +35,10 @@ if __name__ == '__main__':
     name_time_series = 'Swaps_time_series.csv'
 
     # Create new data file or new time series file:
-    # create_data_file(rics_cfg, fields_cfg, name_data)
-    # create_time_series_file(rics_cfg, field, start_date, end_date, name_time_series)
+    edi.create_data_file(rics_cfg, fields_cfg, name_data)
+    edi.create_time_series_file(rics_cfg, field, start_date, end_date, name_time_series)
 
     # Read data:
     df_dt = edi.read_data(name_data)
     # Read time series:
-    # df_ts = edi.read_time_series(name_time_series)
+    df_ts = edi.read_time_series(name_time_series)

@@ -1,8 +1,4 @@
-"""
-Data import/export using the Eikon API. Requires a valid Eikon API key.
-Source: https://github.com/yhilpisch/eikondataapi/blob/master/notebooks/
-        by Dr. Yves Hilpisch
-"""
+
 
 import eikon as ek
 import configparser as cp
@@ -142,6 +138,34 @@ def read_time_series(name: str) -> pd.DataFrame:
     else:
         print('File type "' + name + '.csv' + ' does not exist. Aborted.')
         quit()
+
+
+def create_data_file(rics_conf: str, fields_conf: str, file_name: str) -> None:
+    """
+
+    Create .csv file with specified data from Eikon Python API and save in "/eikon_data_files".
+    :param rics_conf: Name of config file (including ".csv" suffix) with Eikon RICs.
+    :param fields_conf: Name of config file (including ".csv" suffix) with Eikon field names.
+    :param file_name: Name of file to save with data.
+    :return: None.
+    """
+    rics, fields = read_config(rics_conf, fields_conf, time_series=False)
+    make_data(rics, fields, file_name)
+
+
+def create_time_series_file(rics_conf: str, fields_conf: list, start_dt: str, end_dt: str, file_name: str) -> None:
+    """
+
+
+    :param rics_conf: Name of config file (including ".csv" suffix) with Eikon RICs.
+    :param fields_conf: Name of config file (including ".csv" suffix) with Eikon field names.
+    :param start_dt: Earliest date.
+    :param end_dt: Newest date.
+    :param file_name: Name of file to save with data (including ".csv" suffix).
+    :return:
+    """
+    rics = read_config(rics=rics_conf, fields=None, time_series=True)
+    make_time_series(rics, fields_conf, start_dt, end_dt, file_name)
 
 
 def read_config(rics: str, fields, time_series=False):
